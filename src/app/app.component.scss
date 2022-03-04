@@ -1,0 +1,12 @@
+main {
+  display: flex;
+}
+
+.posts {
+  flex: 2;
+  padding: 10px;
+}
+.filters {
+  flex: 1;
+  padding: 10px;
+}

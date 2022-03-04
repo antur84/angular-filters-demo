@@ -1,3 +1,17 @@
-<pre>
-  {{blogPosts$ | async}}
-</pre>
+<h1>My blog</h1>
+<main>
+  <section class="posts">
+    <h2>Latest posts</h2>
+    <article *ngFor="let post of blogPosts$ | async; trackBy: trackById">
+      <h3>
+        {{post.title}}
+      </h3>
+      <p>
+        {{post.body}}
+      </p>
+    </article>
+  </section>
+  <aside class="filters">
+    <h2>Filters</h2>
+  </aside>
+</main>
