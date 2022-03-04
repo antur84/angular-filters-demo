@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BlogModel, DataService } from '../data.service';
 
 @Component({
-    selector: 'blog-posts',
+    selector: 'app-blog-posts',
     templateUrl: 'blog-posts.component.html',
     styleUrls: ['blog-posts.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush

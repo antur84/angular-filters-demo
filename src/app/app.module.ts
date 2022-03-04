@@ -8,17 +8,15 @@ import { BlogPostsModule } from './blog-posts/blog-posts.module';
 import { BlogPostsFiltersModule } from './blog-posts-filters/blog-posts-filters.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     BlogPostsModule,
-    BlogPostsFiltersModule
+    BlogPostsFiltersModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

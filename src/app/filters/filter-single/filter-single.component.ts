@@ -1,11 +1,21 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  FilterComponent,
+  provideSelfAsFilterComponent,
+} from '../filter.component';
+import { FiltersService } from '../filters.service';
 
 @Component({
-    selector: 'filter-single',
-    templateUrl: 'filter-single.component.html',
-    styleUrls: ['filter-single.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-filter-single',
+  templateUrl: 'filter-single.component.html',
+  styleUrls: ['filter-single.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideSelfAsFilterComponent(FilterSingleComponent)],
 })
-export class FilterSingleComponent {
-
+export class FilterSingleComponent extends FilterComponent {
+  @Input()
+  key: string;
+  constructor(private filtersService: FiltersService) {
+    super();
+  }
 }
