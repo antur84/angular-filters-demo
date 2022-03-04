@@ -2,16 +2,10 @@
 <main>
   <section class="posts">
     <h2>Latest posts</h2>
-    <article *ngFor="let post of blogPosts$ | async; trackBy: trackById">
-      <h3>
-        {{post.title}}
-      </h3>
-      <p>
-        {{post.body}}
-      </p>
-    </article>
+    <blog-posts></blog-posts>
   </section>
   <aside class="filters">
     <h2>Filters</h2>
+    <blog-posts-filters></blog-posts-filters>
   </aside>
 </main>

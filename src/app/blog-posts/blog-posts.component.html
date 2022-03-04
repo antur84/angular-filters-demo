@@ -1,0 +1,8 @@
+<article *ngFor="let post of blogPosts$ | async; trackBy: trackById">
+  <h3>
+    {{post.title}}
+  </h3>
+  <p>
+    {{post.body}}
+  </p>
+</article>
