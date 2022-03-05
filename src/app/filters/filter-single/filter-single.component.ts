@@ -16,7 +16,7 @@ export class FilterSingleComponent extends FilterComponent {
   @Input()
   label: string;
 
-  selectedId: string;
+  selectedId: FilterSingleOutputValueType;
 
   constructor(filtersService: FiltersService) {
     super(filtersService);
@@ -25,6 +25,8 @@ export class FilterSingleComponent extends FilterComponent {
   ready$ = () => of(true).pipe(delay(2000));
 
   emitFilterChange = () => {
-    this.filterService.reportFilterValueChanged(this.key, parseInt(this.selectedId, 10));
+    this.filterService.reportFilterValueChanged(this.key, this.selectedId);
   };
 }
+
+export type FilterSingleOutputValueType = string;

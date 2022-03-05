@@ -9,6 +9,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { FilterComponentConfig } from './filter.component';
 @Injectable()
 export abstract class FiltersService<TFilterModel = unknown> implements OnDestroy {
   private filterKeys: string[] = [];
@@ -77,3 +78,13 @@ interface FilterStatus {
   status: 'ready';
   value?: any;
 }
+
+export type ValueMapper<TOutputValue> = (val: any) => TOutputValue;
+
+export type FiltersConfiguration<TFilterModel> = Required<{
+  [key in keyof TFilterModel]: FilterComponentConfig & {
+    key: string;
+    valueMapper: ValueMapper<TFilterModel[key]>;
+    filterPropName: key;
+  };
+}>;

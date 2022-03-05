@@ -16,7 +16,7 @@ export class FilterQueryComponent extends FilterComponent {
   @Input()
   label: string;
 
-  query: string;
+  query: FilterQueryOutputValueType;
   constructor(filtersService: FiltersService) {
     super(filtersService);
   }
@@ -27,3 +27,5 @@ export class FilterQueryComponent extends FilterComponent {
     this.filterService.reportFilterValueChanged(this.key, this.query);
   };
 }
+
+export type FilterQueryOutputValueType = string;
