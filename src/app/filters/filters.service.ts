@@ -1,4 +1,14 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Provider, Type } from '@angular/core';
+
+export const provideAsFiltersService = <T extends Type<FiltersService>>(
+  val: T
+): Provider => [
+  val,
+  {
+    provide: FiltersService,
+    useExisting: val,
+  },
+];
 
 @Injectable()
-export class FiltersService {}
+export abstract class FiltersService {}
