@@ -27,7 +27,7 @@ export interface BlogModel {
 }
 function applyIdFilter(
   filter: BlogPostsFilterModel
-): (value: BlogModel, index: number, array: BlogModel[]) => unknown {
+): (value: BlogModel, index: number, array: BlogModel[]) => boolean {
   return post => (filter.id ? post.id === filter.id : true);
 }
 
