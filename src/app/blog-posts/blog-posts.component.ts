@@ -11,7 +11,7 @@ import { BlogModel, DataService } from '../data.service';
 })
 export class BlogPostsComponent {
   blogPosts$ = this.blogPostsFiltersService.filtersChanged$.pipe(
-    switchMap((filter) => this.dataService.getBlogPosts(filter))
+    switchMap(filter => this.dataService.getBlogPosts(filter))
   );
   constructor(
     private dataService: DataService,

@@ -24,14 +24,14 @@ export class FilterManagerComponent implements AfterContentInit, OnDestroy {
   constructor(private filtersService: FiltersService) {}
 
   ngAfterContentInit(): void {
-    const filterKeys = () => this.filters.map((x) => x.key);
+    const filterKeys = () => this.filters.map(x => x.key);
     this.filters.changes
       .pipe(
         map(() => filterKeys()),
         startWith(filterKeys()),
         takeUntil(this.destroy$)
       )
-      .subscribe((x) => this.filtersService.setFilterKeys(x));
+      .subscribe(x => this.filtersService.setFilterKeys(x));
   }
 
   ngOnDestroy(): void {

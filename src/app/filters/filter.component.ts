@@ -3,9 +3,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { FiltersService } from './filters.service';
 
 @Injectable()
-export abstract class FilterComponent
-  implements FilterComponentConfig, OnInit, OnDestroy
-{
+export abstract class FilterComponent implements FilterComponentConfig, OnInit, OnDestroy {
   protected destroy$ = new Subject<void>();
   protected abstract ready$: () => Observable<boolean>;
   abstract key: string;
@@ -24,9 +22,7 @@ export abstract class FilterComponent
     this.destroy$.complete();
   }
 }
-export const provideSelfAsFilterComponent = <T extends Type<FilterComponent>>(
-  val: T
-): Provider => [
+export const provideSelfAsFilterComponent = <T extends Type<FilterComponent>>(val: T): Provider => [
   {
     provide: FilterComponent,
     useExisting: val,

@@ -10,17 +10,13 @@ import {
   tap,
 } from 'rxjs';
 @Injectable()
-export abstract class FiltersService<TFilterModel = unknown>
-  implements OnDestroy
-{
+export abstract class FiltersService<TFilterModel = unknown> implements OnDestroy {
   private filterKeys: string[] = [];
   private filterKeys$ = new ReplaySubject<typeof this.filterKeys>(1);
   private filterStatus = new Map<string, FilterStatus>();
   private filterStatus$ = new ReplaySubject<typeof this.filterStatus>(1);
 
-  abstract mapToFilterModel: (
-    val: { key: string; value: any }[]
-  ) => TFilterModel;
+  abstract mapToFilterModel: (val: { key: string; value: any }[]) => TFilterModel;
 
   setFilterKeys = (keys: string[]): void => {
     this.filterKeys = keys;
@@ -45,20 +41,18 @@ export abstract class FiltersService<TFilterModel = unknown>
   };
 
   filtersReady$ = combineLatest([this.filterStatus$, this.filterKeys$]).pipe(
-    filter(([status, keys]) =>
-      keys.every((fk) => status.get(fk)?.status === 'ready')
-    ),
+    filter(([status, keys]) => keys.every(fk => status.get(fk)?.status === 'ready')),
     map(([_, keys]) => keys.join()),
     distinctUntilChanged(),
     mapTo(true),
-    tap((x) => console.log('all ready', x))
+    tap(x => console.log('all ready', x))
   );
 
   filtersChanged$ = this.filtersReady$.pipe(
     switchMap(() => this.filterStatus$),
-    map((x) => Array.from(x.entries())),
-    map((x) => x.map(([key, { value }]) => ({ key, value }))),
-    map((x) => this.mapToFilterModel(x))
+    map(x => Array.from(x.entries())),
+    map(x => x.map(([key, { value }]) => ({ key, value }))),
+    map(x => this.mapToFilterModel(x))
   );
 
   private emitFilterStatusChanged() {
@@ -71,9 +65,7 @@ export abstract class FiltersService<TFilterModel = unknown>
   }
 }
 
-export const provideAsFiltersService = <T extends Type<FiltersService>>(
-  val: T
-): Provider => [
+export const provideAsFiltersService = <T extends Type<FiltersService>>(val: T): Provider => [
   val,
   {
     provide: FiltersService,

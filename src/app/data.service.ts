@@ -8,17 +8,13 @@ import { BlogPostsFilterModel } from './blog-posts-filters/blog-posts-filters.se
 })
 export class DataService {
   private url = 'https://jsonplaceholder.typicode.com/posts';
-  private posts$ = this.httpClient
-    .get<BlogModel[]>(this.url)
-    .pipe(shareReplay(1));
+  private posts$ = this.httpClient.get<BlogModel[]>(this.url).pipe(shareReplay(1));
   constructor(private httpClient: HttpClient) {}
 
   getBlogPosts = (filter: BlogPostsFilterModel) =>
     this.posts$.pipe(
-      map((posts) => {
-        return posts
-          .filter(applyQueryFilter(filter))
-          .filter(applyIdFilter(filter));
+      map(posts => {
+        return posts.filter(applyQueryFilter(filter)).filter(applyIdFilter(filter));
       })
     );
 }
@@ -32,14 +28,12 @@ export interface BlogModel {
 function applyIdFilter(
   filter: BlogPostsFilterModel
 ): (value: BlogModel, index: number, array: BlogModel[]) => unknown {
-  return (post) => (filter.id ? post.id === filter.id : true);
+  return post => (filter.id ? post.id === filter.id : true);
 }
 
 function applyQueryFilter(
   filter: BlogPostsFilterModel
 ): (value: BlogModel, index: number, array: BlogModel[]) => boolean {
-  return (post) =>
-    filter.query
-      ? post.body.toLocaleLowerCase().includes(filter.query.toLocaleLowerCase())
-      : true;
+  return post =>
+    filter.query ? post.body.toLocaleLowerCase().includes(filter.query.toLocaleLowerCase()) : true;
 }

@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { delay, of } from 'rxjs';
-import {
-  FilterComponent,
-  provideSelfAsFilterComponent,
-} from '../filter.component';
+import { FilterComponent, provideSelfAsFilterComponent } from '../filter.component';
 import { FiltersService } from '../filters.service';
 
 @Component({

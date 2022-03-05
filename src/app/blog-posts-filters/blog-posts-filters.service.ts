@@ -4,14 +4,10 @@ import { FiltersService } from '../filters/filters.service';
 
 @Injectable()
 export class BlogPostsFiltersService extends FiltersService<BlogPostsFilterModel> {
-  mapToFilterModel: (
-    val: { key: string; value: any }[]
-  ) => BlogPostsFilterModel = (val) => {
+  mapToFilterModel: (val: { key: string; value: any }[]) => BlogPostsFilterModel = val => {
     const filterConfigs = Object.entries(blogPostsFiltersConfig);
     return val.reduce((prev, curr) => {
-      const config = filterConfigs.find(
-        ([_, filterConfig]) => filterConfig.key === curr.key
-      );
+      const config = filterConfigs.find(([_, filterConfig]) => filterConfig.key === curr.key);
       if (!config) {
         return prev;
       }
