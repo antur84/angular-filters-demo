@@ -19,9 +19,14 @@ export class FilterQueryComponent extends FilterComponent {
   @Input()
   label: string;
 
+  query: string;
   constructor(filtersService: FiltersService) {
     super(filtersService);
   }
 
   ready$ = () => of(true);
+
+  emitFilterChange = () => {
+    this.filterService.reportFilterValueChanged(this.key, this.query);
+  };
 }

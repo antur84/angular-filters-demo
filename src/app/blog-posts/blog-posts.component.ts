@@ -10,8 +10,8 @@ import { BlogModel, DataService } from '../data.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlogPostsComponent {
-  blogPosts$ = this.blogPostsFiltersService.filtersReady$.pipe(
-    switchMap(() => this.dataService.getBlogPosts())
+  blogPosts$ = this.blogPostsFiltersService.filtersChanged$.pipe(
+    switchMap((filter) => this.dataService.getBlogPosts(filter))
   );
   constructor(
     private dataService: DataService,
