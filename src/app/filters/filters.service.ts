@@ -30,7 +30,7 @@ export abstract class FiltersService<TFilterModel = unknown> implements OnDestro
     this.emitFilterStatusChanged();
   };
 
-  reportFilterValueChanged = (key: string, value: string) => {
+  reportFilterValueChanged = (key: string, value: any) => {
     const current = this.filterStatus.get(key);
     if (!current) {
       return;
