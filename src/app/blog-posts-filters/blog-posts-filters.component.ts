@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { blogPostsFilterKeys } from './blog-posts-filters.service';
+import { blogPostsFiltersConfig } from './blog-posts-filters.service';
 
 @Component({
   selector: 'app-blog-posts-filters',
@@ -8,5 +8,5 @@ import { blogPostsFilterKeys } from './blog-posts-filters.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlogPostsFiltersComponent {
-  keys = blogPostsFilterKeys;
+  config = blogPostsFiltersConfig;
 }

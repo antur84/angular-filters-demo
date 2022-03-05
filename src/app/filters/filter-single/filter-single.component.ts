@@ -15,6 +15,8 @@ import { FiltersService } from '../filters.service';
 export class FilterSingleComponent extends FilterComponent {
   @Input()
   key: string;
+  @Input()
+  label: string;
   constructor(private filtersService: FiltersService) {
     super();
   }

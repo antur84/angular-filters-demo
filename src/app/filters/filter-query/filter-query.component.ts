@@ -14,4 +14,6 @@ import {
 export class FilterQueryComponent extends FilterComponent {
   @Input()
   key: string;
+  @Input()
+  label: string;
 }

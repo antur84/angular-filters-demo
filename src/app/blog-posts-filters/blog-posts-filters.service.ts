@@ -13,4 +13,9 @@ export interface BlogPostsFilterModel {
   id?: number;
 }
 
-export const blogPostsFilterKeys = { query: 'bp-query', id: 'bp-id' };
+export const blogPostsFiltersConfig: Required<{
+  [key in keyof BlogPostsFilterModel]: FilterComponentConfig;
+}> = {
+  query: { key: 'bp-query', label: 'Search' },
+  id: { key: 'bp-id', label: 'By Id' },
+};
