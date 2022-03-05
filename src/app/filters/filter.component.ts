@@ -1,13 +1,23 @@
-import { Injectable, OnDestroy, Provider, Type } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Injectable, OnDestroy, OnInit, Provider, Type } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { FiltersService } from './filters.service';
 
 @Injectable()
 export abstract class FilterComponent
-  implements FilterComponentConfig, OnDestroy
+  implements FilterComponentConfig, OnInit, OnDestroy
 {
   protected destroy$ = new Subject<void>();
+  protected abstract ready$: () => Observable<void>;
   abstract key: string;
   abstract label: string;
+
+  constructor(protected filterService: FiltersService) {}
+
+  ngOnInit(): void {
+    this.ready$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.filterService.reportOneFilterAsReady(this.key));
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();

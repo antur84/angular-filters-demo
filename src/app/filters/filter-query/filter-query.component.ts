@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { of } from 'rxjs';
 import {
   FilterComponent,
   provideSelfAsFilterComponent,
 } from '../filter.component';
+import { FiltersService } from '../filters.service';
 
 @Component({
   selector: 'app-filter-query',
@@ -16,4 +18,10 @@ export class FilterQueryComponent extends FilterComponent {
   key: string;
   @Input()
   label: string;
+
+  constructor(filtersService: FiltersService) {
+    super(filtersService);
+  }
+
+  ready$ = () => of();
 }

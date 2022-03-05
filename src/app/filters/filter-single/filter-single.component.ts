@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { delay, of } from 'rxjs';
 import {
   FilterComponent,
   provideSelfAsFilterComponent,
@@ -17,7 +18,10 @@ export class FilterSingleComponent extends FilterComponent {
   key: string;
   @Input()
   label: string;
-  constructor(private filtersService: FiltersService) {
-    super();
+
+  constructor(filtersService: FiltersService) {
+    super(filtersService);
   }
+
+  ready$ = () => of().pipe(delay(2000));
 }
