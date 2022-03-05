@@ -7,7 +7,7 @@ export abstract class FilterComponent
   implements FilterComponentConfig, OnInit, OnDestroy
 {
   protected destroy$ = new Subject<void>();
-  protected abstract ready$: () => Observable<void>;
+  protected abstract ready$: () => Observable<boolean>;
   abstract key: string;
   abstract label: string;
 

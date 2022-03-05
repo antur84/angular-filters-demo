@@ -23,5 +23,5 @@ export class FilterSingleComponent extends FilterComponent {
     super(filtersService);
   }
 
-  ready$ = () => of().pipe(delay(2000));
+  ready$ = () => of(true).pipe(delay(2000));
 }

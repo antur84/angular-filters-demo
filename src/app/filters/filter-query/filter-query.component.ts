@@ -23,5 +23,5 @@ export class FilterQueryComponent extends FilterComponent {
     super(filtersService);
   }
 
-  ready$ = () => of();
+  ready$ = () => of(true);
 }
