@@ -31,7 +31,7 @@ export class FilterManagerComponent implements AfterContentInit, OnDestroy {
         startWith(filterKeys()),
         takeUntil(this.destroy$)
       )
-      .subscribe((x) => this.filtersService.setCurrentFilterKeys(x));
+      .subscribe((x) => this.filtersService.setFilterKeys(x));
   }
 
   ngOnDestroy(): void {

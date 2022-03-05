@@ -20,12 +20,12 @@ export abstract class FiltersService<TFilterModel = unknown>
     TFilterModel
   >;
 
-  setCurrentFilterKeys = (keys: string[]): void => {
+  setFilterKeys = (keys: string[]): void => {
     this.filterKeys = keys;
     this.filterKeys$.next(this.filterKeys);
   };
 
-  reportOneFilterAsReady = (key: string) => {
+  reportFilterAsReady = (key: string) => {
     this.filterStatus.set(key, {
       status: 'ready',
     });
