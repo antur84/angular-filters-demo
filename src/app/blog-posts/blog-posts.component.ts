@@ -1,21 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { switchMap } from 'rxjs';
-import { BlogPostsFiltersService } from '../blog-posts-filters/blog-posts-filters.service';
-import { BlogModel, DataService } from '../data.service';
+import { BlogModel, BlogPostsService } from './blog-posts.service';
 
 @Component({
   selector: 'app-blog-posts',
   templateUrl: 'blog-posts.component.html',
   styleUrls: ['blog-posts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [BlogPostsService],
 })
 export class BlogPostsComponent {
-  blogPosts$ = this.blogPostsFiltersService.filtersChanged$.pipe(
-    switchMap(filter => this.dataService.getBlogPosts(filter))
-  );
-  constructor(
-    private dataService: DataService,
-    private blogPostsFiltersService: BlogPostsFiltersService
-  ) {}
+  blogPosts$ = this.blogPostsService.filteredBlogPosts$;
+
+  constructor(private blogPostsService: BlogPostsService) {}
+
   trackById = (_: number, post: BlogModel) => post.id;
 }
