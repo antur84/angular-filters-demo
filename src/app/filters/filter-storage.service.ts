@@ -9,7 +9,7 @@ export class FilterStorageService<T extends FilterOutput> {
     return of(val);
   };
 
-  load = (key: string): Observable<T> => {
+  load = (key: string): Observable<T | null> => {
     const val = localStorage.getItem(key);
     if (!val) {
       return of(null);

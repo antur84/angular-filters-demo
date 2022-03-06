@@ -36,4 +36,4 @@ export class FilterSingleComponent extends FilterComponent<'single'> {
 /**
  * In runtime, the value is a string, even if you bind to numbers
  */
-export type FilterSingleOutputValueType = string;
+export type FilterSingleOutputValueType = string | null;

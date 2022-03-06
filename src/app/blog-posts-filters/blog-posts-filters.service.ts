@@ -28,6 +28,6 @@ export const blogPostsFiltersConfig: FiltersConfiguration<BlogPostsFilterModel> 
     filterPropName: 'id',
     key: 'bp-id',
     label: 'By Id',
-    valueMapper: val => parseInt(val, 10),
+    valueMapper: val => (typeof val === 'string' ? parseInt(val, 10) : null),
   },
 };

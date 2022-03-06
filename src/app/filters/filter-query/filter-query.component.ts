@@ -34,4 +34,4 @@ export class FilterQueryComponent extends FilterComponent<'query'> {
   ready$ = () => this.filterStorageService.load(this.key).pipe(tap(val => (this.query = val)));
 }
 
-export type FilterQueryOutputValueType = string;
+export type FilterQueryOutputValueType = string | null;

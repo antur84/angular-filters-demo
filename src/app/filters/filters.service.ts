@@ -50,7 +50,7 @@ export abstract class FiltersService<TFilterModel extends {} = {}> implements On
   filtersChanged$ = this.filtersReady$.pipe(
     switchMap(() => this.filterStatus$),
     map(x => Array.from(x.entries())),
-    map(x => x.map(([key, { value }]) => ({ key, value }))),
+    map(x => x.map(([key, { value }]) => ({ key, value: value || null }))),
     map(x => this.mapToFilterModel(x))
   );
 
@@ -107,7 +107,9 @@ export type FilterOutputType<TFilterType extends FilterComponentType> = TFilterT
   ? FilterSingleOutputValueType
   : never;
 
-type ValueMapper<TSourceType extends FilterOutput, TTargetType> = (val: TSourceType) => TTargetType;
+type ValueMapper<TSourceType extends FilterOutput, TTargetType> = (
+  val: TSourceType
+) => TTargetType | null;
 
 export type FilterOutput = FilterOutputType<FilterComponentType>;
 export type FiltersConfiguration<TFilterModel> = Required<{
