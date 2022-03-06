@@ -19,7 +19,6 @@ export abstract class FiltersService<TFilterModel extends {} = {}> implements On
   private filterKeys$ = new ReplaySubject<typeof this.filterKeys>(1);
   private filterStatus = new Map<string, FilterStatus>();
   private filterStatus$ = new ReplaySubject<typeof this.filterStatus>(1);
-
   private filtersReady$ = combineLatest([this.filterStatus$, this.filterKeys$]).pipe(
     filter(([status, keys]) => keys.every(fk => status.get(fk)?.status === 'ready')),
     map(([_, keys]) => keys.join()),
@@ -27,23 +26,6 @@ export abstract class FiltersService<TFilterModel extends {} = {}> implements On
     mapTo(true),
     tap(x => console.log('all ready', x))
   );
-
-  private mapToFilterModel: (val: { key: string; value: FilterOutput }[]) => TFilterModel = val => {
-    const filterConfigs = Object.values(
-      this.config
-    ) as FiltersConfiguration<TFilterModel>[keyof TFilterModel][];
-    return val.reduce((prev, curr) => {
-      const cfg = filterConfigs.find(filterConfig => filterConfig.key === curr.key);
-      if (!cfg) {
-        return prev;
-      }
-      const filterPropName = cfg.filterPropName;
-      return {
-        ...prev,
-        [filterPropName]: this.config[filterPropName].valueMapper(curr.value),
-      };
-    }, {} as TFilterModel);
-  };
 
   abstract config: FiltersConfiguration<TFilterModel>;
 
@@ -84,6 +66,23 @@ export abstract class FiltersService<TFilterModel extends {} = {}> implements On
 
   private emitFilterStatusChanged = () => {
     this.filterStatus$.next(this.filterStatus);
+  };
+
+  private mapToFilterModel: (val: { key: string; value: FilterOutput }[]) => TFilterModel = val => {
+    const filterConfigs = Object.values(
+      this.config
+    ) as FiltersConfiguration<TFilterModel>[keyof TFilterModel][];
+    return val.reduce((prev, curr) => {
+      const cfg = filterConfigs.find(filterConfig => filterConfig.key === curr.key);
+      if (!cfg) {
+        return prev;
+      }
+      const filterPropName = cfg.filterPropName;
+      return {
+        ...prev,
+        [filterPropName]: this.config[filterPropName].valueMapper(curr.value),
+      };
+    }, {} as TFilterModel);
   };
 }
 
