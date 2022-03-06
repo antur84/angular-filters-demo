@@ -7,17 +7,16 @@ export abstract class FilterComponent<TFilterComponentType extends FilterCompone
   implements FilterComponentConfig, OnInit, OnDestroy
 {
   protected destroy$ = new Subject<void>();
-  protected abstract ready$: () => Observable<boolean>;
-  type: TFilterComponentType;
+  protected abstract ready$: () => Observable<FilterOutputType<TFilterComponentType>>;
+  protected abstract filtersService: FiltersService;
+
   abstract key: string;
   abstract label: string;
-
-  constructor(protected filterService: FiltersService) {}
 
   ngOnInit(): void {
     this.ready$()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.filterService.reportFilterAsReady(this.key));
+      .subscribe(() => this.filtersService.reportFilterAsReady(this.key));
   }
 
   ngOnDestroy(): void {
@@ -26,7 +25,7 @@ export abstract class FilterComponent<TFilterComponentType extends FilterCompone
   }
 
   emitFilterChange = (val: FilterOutputType<TFilterComponentType>) => {
-    this.filterService.reportFilterValueChanged(this.key, val);
+    this.filtersService.reportFilterValueChanged(this.key, val);
   };
 }
 export const provideSelfAsFilterComponent = <T extends Type<FilterComponent<FilterComponentType>>>(
@@ -41,7 +40,6 @@ export const provideSelfAsFilterComponent = <T extends Type<FilterComponent<Filt
 export interface FilterComponentConfig {
   key: string;
   label: string;
-  type: FilterComponentType;
 }
 
 export type FilterComponentType = 'query' | 'single';

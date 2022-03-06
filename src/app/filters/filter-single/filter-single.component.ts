@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { delay, of } from 'rxjs';
+import { take, tap } from 'rxjs';
+import { FilterStorageService } from '../filter-storage.service';
 import { FilterComponent, provideSelfAsFilterComponent } from '../filter.component';
 import { FiltersService } from '../filters.service';
 
@@ -18,11 +19,19 @@ export class FilterSingleComponent extends FilterComponent<'single'> {
 
   selectedId: FilterSingleOutputValueType;
 
-  constructor(filtersService: FiltersService) {
-    super(filtersService);
+  constructor(
+    private filterStorageService: FilterStorageService<FilterSingleOutputValueType>,
+    protected filtersService: FiltersService
+  ) {
+    super();
   }
 
-  ready$ = () => of(true).pipe(delay(2000));
+  saveAndEmitFilterChange = (val: FilterSingleOutputValueType) => {
+    this.filterStorageService.save(this.key, val).pipe(take(1)).subscribe();
+    this.emitFilterChange(val);
+  };
+
+  ready$ = () => this.filterStorageService.load(this.key).pipe(tap(val => (this.selectedId = val)));
 }
 /**
  * In runtime, the value is a string, even if you bind to numbers

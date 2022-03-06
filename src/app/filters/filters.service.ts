@@ -11,6 +11,7 @@ import {
 } from 'rxjs';
 import { FilterQueryOutputValueType } from './filter-query/filter-query.component';
 import { FilterSingleOutputValueType } from './filter-single/filter-single.component';
+import { FilterStorageService } from './filter-storage.service';
 import { FilterComponentConfig, FilterComponentType } from './filter.component';
 @Injectable()
 export abstract class FiltersService<TFilterModel extends {} = {}> implements OnDestroy {
@@ -91,6 +92,7 @@ export const provideAsFiltersService = <T extends Type<FiltersService>>(val: T):
     provide: FiltersService,
     useExisting: val,
   },
+  FilterStorageService,
 ];
 
 interface FilterStatus {
