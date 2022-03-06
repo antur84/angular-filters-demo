@@ -64,9 +64,10 @@ export abstract class FiltersService<TFilterModel extends {} = {}> implements On
     this.filterKeys$.next(this.filterKeys);
   };
 
-  reportFilterAsReady = (key: string) => {
+  reportFilterAsReady = (key: string, value: FilterOutput) => {
     this.filterStatus.set(key, {
       status: 'ready',
+      value,
     });
     this.emitFilterStatusChanged();
   };

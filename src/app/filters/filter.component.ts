@@ -16,7 +16,7 @@ export abstract class FilterComponent<TFilterComponentType extends FilterCompone
   ngOnInit(): void {
     this.ready$()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.filtersService.reportFilterAsReady(this.key));
+      .subscribe(val => this.filtersService.reportFilterAsReady(this.key, val));
   }
 
   ngOnDestroy(): void {
