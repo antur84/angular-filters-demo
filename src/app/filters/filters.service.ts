@@ -13,13 +13,29 @@ import { FilterQueryOutputValueType } from './filter-query/filter-query.componen
 import { FilterSingleOutputValueType } from './filter-single/filter-single.component';
 import { FilterComponentConfig, FilterComponentType } from './filter.component';
 @Injectable()
-export abstract class FiltersService<TFilterModel = unknown> implements OnDestroy {
+export abstract class FiltersService<TFilterModel extends {} = {}> implements OnDestroy {
   private filterKeys: string[] = [];
   private filterKeys$ = new ReplaySubject<typeof this.filterKeys>(1);
   private filterStatus = new Map<string, FilterStatus>();
   private filterStatus$ = new ReplaySubject<typeof this.filterStatus>(1);
+  private mapToFilterModel: (val: { key: string; value: FilterOutput }[]) => TFilterModel = val => {
+    const filterConfigs = Object.values(
+      this.config
+    ) as FiltersConfiguration<TFilterModel>[keyof TFilterModel][];
+    return val.reduce((prev, curr) => {
+      const cfg = filterConfigs.find(filterConfig => filterConfig.key === curr.key);
+      if (!cfg) {
+        return prev;
+      }
+      const filterPropName = cfg.filterPropName;
+      return {
+        ...prev,
+        [filterPropName]: this.config[filterPropName].valueMapper(curr.value),
+      };
+    }, {} as TFilterModel);
+  };
 
-  abstract mapToFilterModel: (val: { key: string; value: FilterOutput }[]) => TFilterModel;
+  abstract config: FiltersConfiguration<TFilterModel>;
 
   setFilterKeys = (keys: string[]): void => {
     this.filterKeys = keys;

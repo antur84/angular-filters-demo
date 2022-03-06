@@ -1,22 +1,7 @@
-import { Injectable } from '@angular/core';
-import { FilterOutput, FiltersConfiguration, FiltersService } from '../filters/filters.service';
+import { FiltersConfiguration, FiltersService } from '../filters/filters.service';
 
-@Injectable()
 export class BlogPostsFiltersService extends FiltersService<BlogPostsFilterModel> {
-  mapToFilterModel: (val: { key: string; value: FilterOutput }[]) => BlogPostsFilterModel = val => {
-    const filterConfigs = Object.values(blogPostsFiltersConfig);
-    return val.reduce((prev, curr) => {
-      const config = filterConfigs.find(filterConfig => filterConfig.key === curr.key);
-      if (!config) {
-        return prev;
-      }
-      const filterPropName = config.filterPropName;
-      return {
-        ...prev,
-        [filterPropName]: blogPostsFiltersConfig[filterPropName].valueMapper(curr.value),
-      };
-    }, {});
-  };
+  config = blogPostsFiltersConfig;
 
   constructor() {
     super();
