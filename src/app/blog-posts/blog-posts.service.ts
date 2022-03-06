@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, shareReplay, switchMap, switchMapTo, tap } from 'rxjs';
+import { withTransaction } from '@datorama/akita';
+import { map, shareReplay, switchMap, switchMapTo } from 'rxjs';
 import {
   BlogPostsFilterModel,
   BlogPostsFiltersService,
@@ -23,7 +24,10 @@ export class BlogPostsService {
   ) {}
   private getBlogPosts = (filter: BlogPostsFilterModel) =>
     this.allCachedPosts$.pipe(
-      tap(all => this.blogPostsStore.set(all)),
+      withTransaction(all => {
+        this.blogPostsStore.set(all);
+        this.blogPostsStore.updateIsPopulated(true);
+      }),
       switchMapTo(this.blogPostsQuery.selectAll()),
       map(all => {
         return all.filter(applyQueryFilter(filter)).filter(applyIdFilter(filter));

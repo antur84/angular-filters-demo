@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { take, tap } from 'rxjs';
+import { defer, take, tap } from 'rxjs';
 import { FilterStorageService } from '../filter-storage.service';
 import { FilterComponent, provideSelfAsFilterComponent } from '../filter.component';
 import { FiltersService } from '../filters.service';
@@ -17,6 +17,9 @@ export class FilterSingleComponent extends FilterComponent<'single'> {
   @Input()
   label: string;
 
+  options$ = defer(() =>
+    this.filtersService.filterInputOptions$<FilterSingleInputOptionsType>(this.key)
+  );
   selectedId: FilterSingleOutputValueType;
 
   constructor(
@@ -32,8 +35,11 @@ export class FilterSingleComponent extends FilterComponent<'single'> {
   };
 
   ready$ = () => this.filterStorageService.load(this.key).pipe(tap(val => (this.selectedId = val)));
+
+  trackByValue = (_: number, val: FilterSingleInputOptionsType[0]) => val.value;
 }
 /**
  * In runtime, the value is a string, even if you bind to numbers
  */
 export type FilterSingleOutputValueType = string | null;
+export type FilterSingleInputOptionsType = { value: string | number; text: string }[];

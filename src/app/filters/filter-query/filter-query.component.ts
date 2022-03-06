@@ -35,3 +35,4 @@ export class FilterQueryComponent extends FilterComponent<'query'> {
 }
 
 export type FilterQueryOutputValueType = string | null;
+export type FilterQueryInputOptionsType = never;

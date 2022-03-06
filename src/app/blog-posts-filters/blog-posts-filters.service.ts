@@ -1,13 +1,33 @@
 import { Injectable } from '@angular/core';
+import { filter, map, switchMap, take, takeUntil } from 'rxjs';
+import { BlogPostsQuery } from '../blog-posts/blog-posts.query';
 import { FiltersConfiguration, FiltersService } from '../filters/filters.service';
 
 @Injectable()
 export class BlogPostsFiltersService extends FiltersService<BlogPostsFilterModel> {
   config = blogPostsFiltersConfig;
 
-  constructor() {
+  constructor(private blogPostsQuery: BlogPostsQuery) {
     super();
+    this.setFilterOptionsBasedOnBlogPosts();
   }
+
+  private setFilterOptionsBasedOnBlogPosts = () => {
+    this.blogPostsQuery.isPopulated$
+      .pipe(
+        filter(isPopulated => isPopulated),
+        switchMap(() => this.blogPostsQuery.selectAll()),
+        map(all => all.map(x => x.id)),
+        take(1),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(blogIds => {
+        this.setFilterOptions(
+          this.config.id,
+          blogIds.map(x => ({ value: x, text: `${x}` }))
+        );
+      });
+  };
 }
 
 export interface BlogPostsFilterModel {
@@ -15,7 +35,13 @@ export interface BlogPostsFilterModel {
   id?: number;
 }
 
-export const blogPostsFiltersConfig: FiltersConfiguration<BlogPostsFilterModel> = {
+export const blogPostsFiltersConfig: FiltersConfiguration<
+  BlogPostsFilterModel,
+  {
+    id: 'single';
+    query: 'query';
+  }
+> = {
   query: {
     type: 'query',
     filterPropName: 'query',
