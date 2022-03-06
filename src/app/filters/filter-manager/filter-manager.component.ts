@@ -7,7 +7,7 @@ import {
   QueryList,
 } from '@angular/core';
 import { map, startWith, Subject, takeUntil } from 'rxjs';
-import { FilterComponent } from '../filter.component';
+import { FilterComponent, FilterComponentType } from '../filter.component';
 import { FiltersService } from '../filters.service';
 
 @Component({
@@ -19,7 +19,7 @@ import { FiltersService } from '../filters.service';
 export class FilterManagerComponent implements AfterContentInit, OnDestroy {
   private destroy$ = new Subject<void>();
   @ContentChildren(FilterComponent)
-  filters: QueryList<FilterComponent>;
+  filters: QueryList<FilterComponent<FilterComponentType>>;
 
   constructor(private filtersService: FiltersService) {}
 

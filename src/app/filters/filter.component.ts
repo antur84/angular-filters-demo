@@ -1,11 +1,14 @@
 import { Injectable, OnDestroy, OnInit, Provider, Type } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { FiltersService } from './filters.service';
+import { FilterOutputType, FiltersService } from './filters.service';
 
 @Injectable()
-export abstract class FilterComponent implements FilterComponentConfig, OnInit, OnDestroy {
+export abstract class FilterComponent<TFilterComponentType extends FilterComponentType>
+  implements FilterComponentConfig, OnInit, OnDestroy
+{
   protected destroy$ = new Subject<void>();
   protected abstract ready$: () => Observable<boolean>;
+  type: TFilterComponentType;
   abstract key: string;
   abstract label: string;
 
@@ -21,8 +24,14 @@ export abstract class FilterComponent implements FilterComponentConfig, OnInit, 
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  emitFilterChange = (val: FilterOutputType<TFilterComponentType>) => {
+    this.filterService.reportFilterValueChanged(this.key, val);
+  };
 }
-export const provideSelfAsFilterComponent = <T extends Type<FilterComponent>>(val: T): Provider => [
+export const provideSelfAsFilterComponent = <T extends Type<FilterComponent<FilterComponentType>>>(
+  val: T
+): Provider => [
   {
     provide: FilterComponent,
     useExisting: val,
@@ -32,4 +41,7 @@ export const provideSelfAsFilterComponent = <T extends Type<FilterComponent>>(va
 export interface FilterComponentConfig {
   key: string;
   label: string;
+  type: FilterComponentType;
 }
+
+export type FilterComponentType = 'query' | 'single';

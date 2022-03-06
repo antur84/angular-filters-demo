@@ -10,22 +10,19 @@ import { FiltersService } from '../filters.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideSelfAsFilterComponent(FilterQueryComponent)],
 })
-export class FilterQueryComponent extends FilterComponent {
+export class FilterQueryComponent extends FilterComponent<'query'> {
   @Input()
   key: string;
   @Input()
   label: string;
 
   query: FilterQueryOutputValueType;
+
   constructor(filtersService: FiltersService) {
     super(filtersService);
   }
 
   ready$ = () => of(true);
-
-  emitFilterChange = () => {
-    this.filterService.reportFilterValueChanged(this.key, this.query);
-  };
 }
 
 export type FilterQueryOutputValueType = string;

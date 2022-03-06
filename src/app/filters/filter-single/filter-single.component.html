@@ -1,6 +1,6 @@
 <label>
   {{label}}
-  <select [(ngModel)]="selectedId" (ngModelChange)="emitFilterChange()">
+  <select [(ngModel)]="selectedId" (ngModelChange)="emitFilterChange(selectedId)">
     <option [value]="null">No specific id</option>
     <option [value]="1">1</option>
     <option [value]="2">2</option>

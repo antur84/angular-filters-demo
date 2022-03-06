@@ -10,7 +10,7 @@ import { FiltersService } from '../filters.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideSelfAsFilterComponent(FilterSingleComponent)],
 })
-export class FilterSingleComponent extends FilterComponent {
+export class FilterSingleComponent extends FilterComponent<'single'> {
   @Input()
   key: string;
   @Input()
@@ -23,10 +23,8 @@ export class FilterSingleComponent extends FilterComponent {
   }
 
   ready$ = () => of(true).pipe(delay(2000));
-
-  emitFilterChange = () => {
-    this.filterService.reportFilterValueChanged(this.key, this.selectedId);
-  };
 }
-
+/**
+ * In runtime, the value is a string, even if you bind to numbers
+ */
 export type FilterSingleOutputValueType = string;

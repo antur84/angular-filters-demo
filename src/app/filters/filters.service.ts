@@ -9,7 +9,9 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { FilterComponentConfig } from './filter.component';
+import { FilterQueryOutputValueType } from './filter-query/filter-query.component';
+import { FilterSingleOutputValueType } from './filter-single/filter-single.component';
+import { FilterComponentConfig, FilterComponentType } from './filter.component';
 @Injectable()
 export abstract class FiltersService<TFilterModel = unknown> implements OnDestroy {
   private filterKeys: string[] = [];
@@ -17,7 +19,7 @@ export abstract class FiltersService<TFilterModel = unknown> implements OnDestro
   private filterStatus = new Map<string, FilterStatus>();
   private filterStatus$ = new ReplaySubject<typeof this.filterStatus>(1);
 
-  abstract mapToFilterModel: (val: { key: string; value: any }[]) => TFilterModel;
+  abstract mapToFilterModel: (val: { key: string; value: FilterOutput }[]) => TFilterModel;
 
   setFilterKeys = (keys: string[]): void => {
     this.filterKeys = keys;
@@ -31,7 +33,7 @@ export abstract class FiltersService<TFilterModel = unknown> implements OnDestro
     this.emitFilterStatusChanged();
   };
 
-  reportFilterValueChanged = (key: string, value: any) => {
+  reportFilterValueChanged = (key: string, value: FilterOutput) => {
     const current = this.filterStatus.get(key);
     if (!current) {
       return;
@@ -76,15 +78,23 @@ export const provideAsFiltersService = <T extends Type<FiltersService>>(val: T):
 
 interface FilterStatus {
   status: 'ready';
-  value?: any;
+  value?: FilterOutput;
 }
 
-export type ValueMapper<TOutputValue> = (val: any) => TOutputValue;
+export type FilterOutputType<TFilterType extends FilterComponentType> = TFilterType extends 'query'
+  ? FilterQueryOutputValueType
+  : TFilterType extends 'single'
+  ? FilterSingleOutputValueType
+  : never;
 
+type ValueMapper<TSourceType extends FilterOutput, TTargetType> = (val: TSourceType) => TTargetType;
+
+export type FilterOutput = FilterOutputType<FilterComponentType>;
 export type FiltersConfiguration<TFilterModel> = Required<{
   [key in keyof TFilterModel]: FilterComponentConfig & {
     key: string;
-    valueMapper: ValueMapper<TFilterModel[key]>;
+    valueMapper: ValueMapper<FilterOutput, TFilterModel[key]>;
     filterPropName: key;
+    type: FilterComponentType;
   };
 }>;
