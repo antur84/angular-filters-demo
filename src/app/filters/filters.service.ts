@@ -18,6 +18,15 @@ export abstract class FiltersService<TFilterModel extends {} = {}> implements On
   private filterKeys$ = new ReplaySubject<typeof this.filterKeys>(1);
   private filterStatus = new Map<string, FilterStatus>();
   private filterStatus$ = new ReplaySubject<typeof this.filterStatus>(1);
+
+  private filtersReady$ = combineLatest([this.filterStatus$, this.filterKeys$]).pipe(
+    filter(([status, keys]) => keys.every(fk => status.get(fk)?.status === 'ready')),
+    map(([_, keys]) => keys.join()),
+    distinctUntilChanged(),
+    mapTo(true),
+    tap(x => console.log('all ready', x))
+  );
+
   private mapToFilterModel: (val: { key: string; value: FilterOutput }[]) => TFilterModel = val => {
     const filterConfigs = Object.values(
       this.config
@@ -36,6 +45,18 @@ export abstract class FiltersService<TFilterModel extends {} = {}> implements On
   };
 
   abstract config: FiltersConfiguration<TFilterModel>;
+
+  filtersChanged$ = this.filtersReady$.pipe(
+    switchMap(() => this.filterStatus$),
+    map(x => Array.from(x.entries())),
+    map(x => x.map(([key, { value }]) => ({ key, value }))),
+    map(x => this.mapToFilterModel(x))
+  );
+
+  ngOnDestroy(): void {
+    this.filterStatus$.complete();
+    this.filterKeys$.complete();
+  }
 
   setFilterKeys = (keys: string[]): void => {
     this.filterKeys = keys;
@@ -59,29 +80,9 @@ export abstract class FiltersService<TFilterModel extends {} = {}> implements On
     this.emitFilterStatusChanged();
   };
 
-  filtersReady$ = combineLatest([this.filterStatus$, this.filterKeys$]).pipe(
-    filter(([status, keys]) => keys.every(fk => status.get(fk)?.status === 'ready')),
-    map(([_, keys]) => keys.join()),
-    distinctUntilChanged(),
-    mapTo(true),
-    tap(x => console.log('all ready', x))
-  );
-
-  filtersChanged$ = this.filtersReady$.pipe(
-    switchMap(() => this.filterStatus$),
-    map(x => Array.from(x.entries())),
-    map(x => x.map(([key, { value }]) => ({ key, value }))),
-    map(x => this.mapToFilterModel(x))
-  );
-
-  private emitFilterStatusChanged() {
+  private emitFilterStatusChanged = () => {
     this.filterStatus$.next(this.filterStatus);
-  }
-
-  ngOnDestroy(): void {
-    this.filterStatus$.complete();
-    this.filterKeys$.complete();
-  }
+  };
 }
 
 export const provideAsFiltersService = <T extends Type<FiltersService>>(val: T): Provider => [
