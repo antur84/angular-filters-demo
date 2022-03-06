@@ -1,5 +1,7 @@
+import { Injectable } from '@angular/core';
 import { FiltersConfiguration, FiltersService } from '../filters/filters.service';
 
+@Injectable()
 export class BlogPostsFiltersService extends FiltersService<BlogPostsFilterModel> {
   config = blogPostsFiltersConfig;
 
